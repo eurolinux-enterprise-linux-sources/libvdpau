@@ -1,10 +1,13 @@
 Name:           libvdpau
-Version:        1.1
-Release:        2%{?dist}
+Version:        1.1.1
+Release:        3%{?dist}
 Summary:        Wrapper library for the Video Decode and Presentation API
 License:        MIT
 URL:            http://freedesktop.org/wiki/Software/VDPAU
-Source0:        http://cgit.freedesktop.org/~aplattner/%{name}/snapshot/%{name}-%{version}.tar.bz2
+Source0:        http://cgit.freedesktop.org/vdpau/libvdpau/snapshot/%{name}-%{version}.tar.bz2
+Patch0:         0001-mesa_dri2-Add-missing-include-of-config.h-to-define-.patch
+Patch1:         0002-util.h-Make-getenv_wrapper-static-inline.patch
+Patch2:         0003-Fix-doc-error-on-displayable-surface-types.patch
 
 BuildRequires:  autoconf
 BuildRequires:  automake
@@ -19,8 +22,6 @@ BuildRequires:  tex(latex)
 BuildRequires:  tetex-latex
 %endif
 BuildRequires:  xorg-x11-proto-devel
-
-Patch0: Use-secure_getenv-3-to-improve-security.patch
 
 %description
 VDPAU is the Video Decode and Presentation API for UNIX. It provides an
@@ -48,7 +49,9 @@ applications that use %{name}.
 
 %prep
 %setup -q
-%patch0 -p1 -b .cve20155198-5199-5200
+%patch0 -p1
+%patch1 -p1
+%patch2 -p1
 
 %build
 autoreconf -vif
@@ -83,11 +86,28 @@ mv doc/html-out html
 %{_libdir}/pkgconfig/vdpau.pc
 
 %changelog
-* Thu Aug 27 2015 Benjamin Tissoires <benjamin.tissoires@redhat.com> 1.1-2
+* Thu Feb 04 2016 Fedora Release Engineering <releng@fedoraproject.org> - 1.1.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_24_Mass_Rebuild
+
+* Fri Oct 02 2015 Nicolas Chauvet <kwizart@gmail.com> - 1.1.1-2
+- Backport current patches
+- Switch to new upstream git repository on freedesktop.org
+
+* Tue Sep 01 2015 Nicolas Chauvet <kwizart@gmail.com> - 1.1.1-1
+- Update to 1.1.1
+  Security fix for CVE-2015-5198, CVE-2015-5199, CVE-2015-5200
+
+* Thu Aug 27 2015 Benjamin Tissoires <benjamin.tissoires@redhat.com>
 - Resolves rhbz #1253829 - fix 3 CVEs:
  - CVE-2015-5198: libvdpau incorrect check for security transition
  - CVE-2015-5199: libvdpau directory traversal in dlopen
  - CVE-2015-5200: libvdpau vulnerability in trace functionality
+
+* Wed Jun 17 2015 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.1-3
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_23_Mass_Rebuild
+
+* Sat May 02 2015 Kalev Lember <kalevlember@gmail.com> - 1.1-2
+- Rebuilt for GCC 5 C++11 ABI change
 
 * Tue Mar 17 2015 Nicolas Chauvet <kwizart@gmail.com> - 1.1-1
 - Update to 1.1
